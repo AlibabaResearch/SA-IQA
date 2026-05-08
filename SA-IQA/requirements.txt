@@ -7,8 +7,7 @@ ms-swift>=3.9.2
 numpy>=1.26.4
 pandas>=2.2.3
 scipy>=1.15.3
-tqdm>=4.67.1
-Pillow>=10.4.0
+Pillow>=11.2.1
 sentencepiece>=0.2.0
 
 # For training, please additionally install CUDA-compatible packages such as DeepSpeed and FlashAttention according to your local environment.

@@ -6,8 +6,8 @@ import os
 import numpy as np
 import pandas as pd
 from scipy.stats import pearsonr, spearmanr
-from tqdm import tqdm
 
+from local_progress import progress_iter
 from swift.llm import PtEngine, RequestConfig, InferRequest
 
 
@@ -185,7 +185,7 @@ def run_inference(
                 print(f"Error processing line {i}: {e}")
 
     batch_num = math.ceil(len(infer_requests) / batch_size)
-    for batch_start in tqdm(
+    for batch_start in progress_iter(
         range(0, len(infer_requests), batch_size),
         desc=f"Evaluating [{os.path.basename(test_jsonl)}]",
         total=batch_num,
