@@ -1,0 +1,29 @@
+SA-IQA Model License
+
+Copyright 2025 Alibaba Group
+
+The SA-IQA model weights are released for non-commercial research and educational purposes only.
+
+This model is a fine-tuned model based on Ovis2.5-9B. Use of this model is subject to:
+1. This license; and
+2. The license terms of the underlying base model Ovis2.5-9B.
+
+You may:
+1. Download and use the model for non-commercial research, academic study, and evaluation.
+2. Fine-tune the model for non-commercial research purposes.
+3. Report benchmark or experimental results based on the model.
+
+You may not:
+1. Use the model or derivative models for commercial purposes without prior written permission.
+2. Redistribute the model weights or derivative weights for commercial deployment.
+3. Use the model in violation of applicable laws or regulations.
+4. Remove or alter copyright, attribution, or license notices.
+
+Users must:
+1. Cite the associated paper when using the model in academic work.
+2. Comply with the license of Ovis2.5-9B and any other third-party dependencies.
+3. Ensure responsible and lawful use.
+
+The model is provided "AS IS", without warranty of any kind, express or implied. The copyright holders shall not be liable for any claim, damages, or other liability arising from the use of the model.
+
+For commercial licensing inquiries, please contact the authors or Alibaba Group.

@@ -1,0 +1,40 @@
+cff-version: 1.2.0
+title: "SA-IQA-Release"
+message: "If you use this repository, please cite our paper."
+type: software
+authors:
+  - family-names: Gao
+    given-names: Yuan
+  - family-names: Song
+    given-names: Jin
+  - family-names: Fei
+    given-names: Yiyun
+  - family-names: Li
+    given-names: Gongzhe
+  - family-names: Yang
+    given-names: Ruigao
+repository-code: "https://github.com/<your-org-or-username>/SA-IQA-Release"
+abstract: "Official release of SA-BENCH, SA-IQA codebase, and SA-IQA model for spatial aesthetics assessment of interior images."
+keywords:
+  - image quality assessment
+  - aesthetics assessment
+  - interior image
+  - multimodal model
+  - spatial aesthetics
+license: "Apache-2.0"
+preferred-citation:
+  type: conference-paper
+  title: "Beyond Pixels: Benchmarking and Reward-Based Assessing Framework for Visual Spatial Aesthetics"
+  authors:
+    - family-names: Gao
+      given-names: Yuan
+    - family-names: Song
+      given-names: Jin
+    - family-names: Fei
+      given-names: Yiyun
+    - family-names: Li
+      given-names: Gongzhe
+    - family-names: Yang
+      given-names: Ruigao
+  year: 2025
+  booktitle: "CVPR 2025 Workshop"

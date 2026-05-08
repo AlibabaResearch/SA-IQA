@@ -1,0 +1,25 @@
+SA-BENCH Dataset License
+
+Copyright 2025 Alibaba Group
+
+The SA-BENCH dataset is made available for non-commercial research and educational purposes only.
+
+You may:
+1. Download and use the dataset for non-commercial research, academic study, and benchmarking.
+2. Reproduce experimental results reported in the associated paper.
+3. Create derived annotations or analysis results for non-commercial research purposes.
+
+You may not:
+1. Use the dataset or any part of it for commercial purposes.
+2. Redistribute the raw images or annotations for commercial use.
+3. Use the dataset to train or develop products or services for commercial deployment without prior written permission.
+4. Remove or alter copyright, attribution, or license notices.
+
+Users must:
+1. Cite the associated paper when using the dataset in academic work.
+2. Comply with any applicable third-party rights associated with the data.
+3. Use the dataset in accordance with applicable laws and regulations.
+
+The dataset is provided "AS IS", without warranty of any kind, express or implied. The copyright holders shall not be liable for any claim, damages, or other liability arising from the use of the dataset.
+
+For commercial licensing inquiries, please contact the authors or Alibaba Group.
