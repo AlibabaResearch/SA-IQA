@@ -1,8 +1,11 @@
 import argparse
 import os
+from typing import Optional
 
 import pandas as pd
 from scipy.stats import pearsonr, spearmanr
+
+from prompt_configs import PROMPT_VERSIONS
 
 
 DIMENSIONS = ["distortion", "harmony", "layout", "lighting"]
@@ -62,8 +65,16 @@ def compute_plcc_srcc(df: pd.DataFrame) -> tuple:
     return plcc_value, srcc_value
 
 
-def parse_args():
-    parser = argparse.ArgumentParser(description="Evaluate overall PLCC/SRCC for SA-IQA prompt1 results.")
+def parse_args(argv=None, default_prompt_version: Optional[int] = None):
+    parser = argparse.ArgumentParser(description="Evaluate overall PLCC/SRCC for SA-IQA prompt results.")
+    parser.add_argument(
+        "--prompt_version",
+        type=int,
+        default=default_prompt_version,
+        choices=PROMPT_VERSIONS,
+        required=default_prompt_version is None,
+        help="Prompt version to evaluate.",
+    )
     parser.add_argument(
         "--results_dir",
         type=str,
@@ -74,30 +85,31 @@ def parse_args():
         "--output_csv",
         type=str,
         default=None,
-        help="Path to save merged CSV. Defaults to ../results/all_prompt1_sa-iqa-prompt1.csv",
+        help="Path to save merged CSV. Defaults to ../results/all_prompt{prompt_version}_{model_name}.csv",
     )
     parser.add_argument(
         "--model_name",
         type=str,
-        default="sa-iqa-prompt1",
-        help="Model name suffix used in result CSV filenames.",
+        default=None,
+        help="Model name suffix used in result CSV filenames. Defaults to sa-iqa-prompt{prompt_version}.",
     )
-    return parser.parse_args()
+    return parser.parse_args(argv)
 
 
-def main():
-    args = parse_args()
-    prompt_version = 1
+def main(argv=None, default_prompt_version: Optional[int] = None):
+    args = parse_args(argv, default_prompt_version)
+    prompt_version = args.prompt_version
+    model_name = args.model_name or f"sa-iqa-prompt{prompt_version}"
 
     final_df = load_and_merge_csv_files(
         results_dir=args.results_dir,
         prompt_version=prompt_version,
-        model_name=args.model_name,
+        model_name=model_name,
     )
 
     output_csv = args.output_csv or os.path.join(
         args.results_dir,
-        f"all_prompt{prompt_version}_{args.model_name}.csv"
+        f"all_prompt{prompt_version}_{model_name}.csv"
     )
 
     output_dir = os.path.dirname(output_csv)
@@ -115,22 +127,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-
-# Example usage:
-#
-# Run from SA-IQA/tools:
-#   python evaluate_correlation_prompt1.py
-#
-# Specify results directory explicitly:
-#   python evaluate_correlation_prompt1.py \
-#       --results_dir ../results
-#
-# Specify output CSV explicitly:
-#   python evaluate_correlation_prompt1.py \
-#       --results_dir ../results \
-#       --output_csv ../results/all_prompt1_sa-iqa-prompt1.csv
-#
-# Run from the project root:
-#   python SA-IQA/tools/evaluate_correlation_prompt1.py \
-#       --results_dir ./SA-IQA/results

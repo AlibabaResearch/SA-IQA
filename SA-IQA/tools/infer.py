@@ -2,30 +2,18 @@ import argparse
 import json
 import math
 import os
+from typing import Optional
 
 import numpy as np
 import pandas as pd
 from scipy.stats import pearsonr, spearmanr
 
 from local_progress import progress_iter
-from swift.llm import PtEngine, RequestConfig, InferRequest
+from prompt_configs import PROMPTS, PROMPT_VERSIONS, SUBSET_MAP
 
 
 LABELS = ["excellent", "good", "fair", "poor", "bad"]
-
-SUBSET_MAP = {
-    "distortion": "2k",
-    "harmony": "7k",
-    "layout": "6k",
-    "lighting": "3k",
-}
-
-PROMPT1 = {
-    "distortion": "<image>Please evaluate the spatial aesthetic distortion quality level of this image.",
-    "harmony": "<image>Please evaluate the spatial aesthetic harmony quality level of this image.",
-    "layout": "<image>Please evaluate the spatial aesthetic layout quality level of this image.",
-    "lighting": "<image>Please evaluate the spatial aesthetic lighting quality level of this image.",
-}
+DIMENSIONS = ["distortion", "harmony", "layout", "lighting"]
 
 
 def calculate_iqa_score(logits: dict, item_image: str = "") -> float:
@@ -151,6 +139,8 @@ def run_inference(
     max_batch_size: int = 64,
 ) -> None:
     """Run SA-IQA inference and save top logprobs."""
+    from swift.llm import InferRequest, PtEngine, RequestConfig
+
     output_dir = os.path.dirname(output_jsonl)
     if output_dir:
         os.makedirs(output_dir, exist_ok=True)
@@ -206,12 +196,12 @@ def run_inference(
     print(f"Saved inference logits to {output_jsonl}")
 
 
-def get_default_test_jsonl(data_root: str, dimension: str) -> str:
+def get_default_test_jsonl(data_root: str, dimension: str, prompt_version: int) -> str:
     subset = SUBSET_MAP[dimension]
     return os.path.join(
         data_root,
         "annotations",
-        f"{dimension}_{subset}_test_prompt1.jsonl",
+        f"{dimension}_{subset}_test_prompt{prompt_version}.jsonl",
     )
 
 
@@ -224,9 +214,17 @@ def get_default_input_csv(data_root: str, dimension: str) -> str:
     )
 
 
-def parse_args():
-    parser = argparse.ArgumentParser(description="Inference and evaluation script for SA-IQA prompt1.")
+def parse_args(argv=None, default_prompt_version: Optional[int] = None):
+    parser = argparse.ArgumentParser(description="Inference and evaluation script for SA-IQA prompts.")
 
+    parser.add_argument(
+        "--prompt_version",
+        type=int,
+        default=default_prompt_version,
+        choices=PROMPT_VERSIONS,
+        required=default_prompt_version is None,
+        help="Prompt version to evaluate.",
+    )
     parser.add_argument(
         "--mode",
         type=str,
@@ -237,8 +235,8 @@ def parse_args():
     parser.add_argument(
         "--model_path",
         type=str,
-        default="../../SA-IQA-model/sa-iqa-prompt1",
-        help="Path to the trained SA-IQA prompt1 model.",
+        default=None,
+        help="Path to the trained SA-IQA model. Defaults to ../../SA-IQA-model/sa-iqa-prompt{prompt_version}.",
     )
     parser.add_argument(
         "--data_root",
@@ -250,7 +248,7 @@ def parse_args():
         "--dimension",
         type=str,
         required=True,
-        choices=["distortion", "harmony", "layout", "lighting"],
+        choices=DIMENSIONS,
         help="Evaluation dimension.",
     )
     parser.add_argument(
@@ -302,24 +300,29 @@ def parse_args():
         help="Max batch size for PtEngine.",
     )
 
-    return parser.parse_args()
+    return parser.parse_args(argv)
 
 
-def main():
-    args = parse_args()
+def main(argv=None, default_prompt_version: Optional[int] = None):
+    args = parse_args(argv, default_prompt_version)
+    prompt_version = args.prompt_version
 
-    message_content = PROMPT1[args.dimension]
-    test_jsonl = args.test_jsonl or get_default_test_jsonl(args.data_root, args.dimension)
+    if args.model_path is None:
+        args.model_path = f"../../SA-IQA-model/sa-iqa-prompt{prompt_version}"
+
+    message_content = PROMPTS[prompt_version][args.dimension]
+    test_jsonl = args.test_jsonl or get_default_test_jsonl(args.data_root, args.dimension, prompt_version)
     input_csv = args.input_csv or get_default_input_csv(args.data_root, args.dimension)
 
     model_name = os.path.basename(os.path.normpath(args.model_path))
-    result_stem = f"{args.dimension}_prompt1_{model_name}"
+    result_stem = f"{args.dimension}_prompt{prompt_version}_{model_name}"
 
     output_jsonl = args.output_jsonl or os.path.join(args.results_dir, f"{result_stem}.jsonl")
     output_csv = args.output_csv or os.path.join(args.results_dir, f"{result_stem}.csv")
     gt_column = args.gt_column or f"{args.dimension}_score_mos"
 
     print(f"mode: {args.mode}")
+    print(f"prompt_version: {prompt_version}")
     print(f"model_path: {args.model_path}")
     print(f"data_root: {args.data_root}")
     print(f"dimension: {args.dimension}")
@@ -357,49 +360,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-
-# Example usage:
-#
-# Run from SA-IQA/tools:
-#   python infer_prompt1.py --mode all --dimension lighting
-#
-# Full pipeline for each dimension:
-#   python infer_prompt1.py --mode all --dimension distortion
-#   python infer_prompt1.py --mode all --dimension harmony
-#   python infer_prompt1.py --mode all --dimension layout
-#   python infer_prompt1.py --mode all --dimension lighting
-#
-# Inference only:
-#   python infer_prompt1.py --mode infer --dimension lighting
-#
-# Score conversion only:
-#   python infer_prompt1.py --mode score --dimension lighting
-#
-# Evaluation only:
-#   python infer_prompt1.py --mode eval --dimension lighting
-#
-# Explicitly specify model/data/results paths:
-#   python infer_prompt1.py \
-#       --mode all \
-#       --dimension lighting \
-#       --model_path ../../SA-IQA-model/sa-iqa-prompt1 \
-#       --data_root ../../SA-BENCH \
-#       --results_dir ../results
-#
-# Run from the project root:
-#   python SA-IQA/tools/infer_prompt1.py \
-#       --mode all \
-#       --dimension lighting \
-#       --model_path ./SA-IQA-model/sa-iqa-prompt1 \
-#       --data_root ./SA-BENCH \
-#       --results_dir ./SA-IQA/results
-#
-# Manually specify input/output files:
-#   python infer_prompt1.py \
-#       --mode all \
-#       --dimension lighting \
-#       --test_jsonl ../../SA-BENCH/annotations/lighting_3k_test_prompt1.jsonl \
-#       --input_csv ../../SA-BENCH/annotations/lighting_3k_test.csv \
-#       --output_jsonl ../results/lighting_prompt1_sa-iqa-prompt1.jsonl \
-#       --output_csv ../results/lighting_prompt1_sa-iqa-prompt1.csv

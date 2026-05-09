@@ -66,7 +66,6 @@ See [SA-BENCH/README.md](./SA-BENCH/README.md) for details.
 - training scripts
 - inference scripts
 - evaluation scripts
-- single-image inference script
 - CSV-to-JSONL conversion tool
 - Python requirements
 
@@ -115,32 +114,25 @@ Run inference with the released `sa-iqa-prompt4` model:
 
 ```bash
 cd SA-IQA/tools
-python infer_prompt4.py --mode all --dimension lighting
+python infer.py --prompt_version 4 --mode all --dimension lighting
 ```
 
 Run all four dimensions:
 
 ```bash
-python infer_prompt4.py --mode all --dimension distortion
-python infer_prompt4.py --mode all --dimension harmony
-python infer_prompt4.py --mode all --dimension layout
-python infer_prompt4.py --mode all --dimension lighting
+python infer.py --prompt_version 4 --mode all --dimension distortion
+python infer.py --prompt_version 4 --mode all --dimension harmony
+python infer.py --prompt_version 4 --mode all --dimension layout
+python infer.py --prompt_version 4 --mode all --dimension lighting
 ```
 
-### 3. Run Single-Image Inference
-
-```bash
-cd SA-IQA/tools
-python infer_single_image_prompt4.py --image /path/to/image.jpg --dimension all
-```
-
-### 4. Run Overall Evaluation
+### 3. Run Overall Evaluation
 
 Compute overall correlation across all four dimensions:
 
 ```bash
 cd SA-IQA/tools
-python evaluate_correlation_prompt4.py
+python evaluate_correlation.py --prompt_version 4
 ```
 
 ## Release Contents
@@ -154,8 +146,7 @@ This release includes:
 ## Notes
 
 - `SA-IQA-model/sa-iqa-prompt4` is the released trained model used for inference.
-- Prompt-specific training and inference scripts are provided in `SA-IQA/tools/`.
-- `infer_single_image_prompt4.py` supports direct inference on a single image.
+- Unified training, inference, and evaluation scripts are provided in `SA-IQA/tools/`.
 - The `results/` folder in `SA-IQA/` stores intermediate inference outputs and scored CSV files.
 - For standard usage, we recommend directly using **prompt4**.
 - This project uses `Ovis2.5-9B` as the base model. Please comply with its original license and notice files when using the released model.

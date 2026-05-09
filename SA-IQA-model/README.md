@@ -28,8 +28,7 @@ Among the four prompt variants studied in the paper, **prompt4** is the recommen
 For standard use, please run inference with:
 
 - model: `sa-iqa-prompt4`
-- inference script: `../SA-IQA/tools/infer_prompt4.py`
-- single-image inference script: `../SA-IQA/tools/infer_single_image_prompt4.py`
+- inference script: `../SA-IQA/tools/infer.py --prompt_version 4`
 
 ## Example Usage
 
@@ -37,21 +36,15 @@ Run dimension-wise inference:
 
 ```bash
 cd ../SA-IQA/tools
-python infer_prompt4.py --mode all --dimension lighting
-```
-
-Run single-image inference:
-
-```bash
-cd ../SA-IQA/tools
-python infer_single_image_prompt4.py --image /path/to/image.jpg --dimension all
+python infer.py --prompt_version 4 --mode all --dimension lighting
 ```
 
 Specify the model path explicitly:
 
 ```bash
 cd ../SA-IQA/tools
-python infer_prompt4.py \
+python infer.py \
+    --prompt_version 4 \
     --mode all \
     --dimension lighting \
     --model_path ../../SA-IQA-model/sa-iqa-prompt4
@@ -134,4 +127,3 @@ If you find this model useful, please cite:
   year={2025}
 }
 ```
-

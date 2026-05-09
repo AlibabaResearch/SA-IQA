@@ -1,3 +1,4 @@
+# Core runtime: inference, scoring, evaluation, and data conversion.
 torch>=2.6.0
 torchvision>=0.21.0
 torchaudio>=2.6.0
@@ -10,7 +11,10 @@ scipy>=1.15.3
 Pillow>=11.2.1
 sentencepiece>=0.2.0
 
-# For training, please additionally install CUDA-compatible packages such as DeepSpeed and FlashAttention according to your local environment.
+# Training runtime used by tools/train_sft.sh.
+# FlashAttention may require a CUDA-compatible wheel or a source build for your environment.
+deepspeed>=0.15.4
+flash-attn>=2.7.4.post1
 
 # Tested environment:
 # - torch 2.6.0

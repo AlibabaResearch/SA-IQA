@@ -20,19 +20,11 @@ SA-IQA/
 ├── requirements.txt
 └── tools/
     ├── convert_csv_to_jsonl.py
-    ├── evaluate_correlation_prompt1.py
-    ├── evaluate_correlation_prompt2.py
-    ├── evaluate_correlation_prompt3.py
-    ├── evaluate_correlation_prompt4.py
-    ├── infer_prompt1.py
-    ├── infer_prompt2.py
-    ├── infer_prompt3.py
-    ├── infer_prompt4.py
-    ├── infer_single_image_prompt4.py
-    ├── train_sft_prompt1.sh
-    ├── train_sft_prompt2.sh
-    ├── train_sft_prompt3.sh
-    └── train_sft_prompt4.sh
+    ├── evaluate_correlation.py
+    ├── infer.py
+    ├── local_progress.py
+    ├── prompt_configs.py
+    └── train_sft.sh
 ```
 
 ## Environment Setup
@@ -50,44 +42,29 @@ pip install -r requirements.txt
 
 ### Training Scripts
 
-The following scripts are provided for supervised fine-tuning under different prompt settings:
+Use the unified training script for supervised fine-tuning under different prompt settings:
 
-- `tools/train_sft_prompt1.sh`
-- `tools/train_sft_prompt2.sh`
-- `tools/train_sft_prompt3.sh`
-- `tools/train_sft_prompt4.sh`
+```bash
+bash tools/train_sft.sh --prompt_version 4
+```
 
-Among them, **prompt4** is the recommended setting and corresponds to the released final model.
+Among the prompt variants, **prompt4** is the recommended setting and corresponds to the released final model.
 
 ### Inference Scripts
 
-The following scripts perform model inference and score generation:
-
-- `tools/infer_prompt1.py`
-- `tools/infer_prompt2.py`
-- `tools/infer_prompt3.py`
-- `tools/infer_prompt4.py`
-
-For standard use in this release, we recommend using:
+Use the unified inference script for model inference and score generation:
 
 ```bash
-python tools/infer_prompt4.py --mode all --dimension lighting
+python tools/infer.py --prompt_version 4 --mode all --dimension lighting
 ```
-
-### Single-Image Inference Script
-
-- `tools/infer_single_image_prompt4.py`
-
-This script supports direct inference on a single image using the released `sa-iqa-prompt4` model.
 
 ### Evaluation Scripts
 
-The following scripts compute correlation metrics between predictions and ground-truth MOS:
+Use the unified evaluation script to compute correlation metrics between predictions and ground-truth MOS:
 
-- `tools/evaluate_correlation_prompt1.py`
-- `tools/evaluate_correlation_prompt2.py`
-- `tools/evaluate_correlation_prompt3.py`
-- `tools/evaluate_correlation_prompt4.py`
+```bash
+python tools/evaluate_correlation.py --prompt_version 4
+```
 
 ### Conversion Tool
 
@@ -103,15 +80,11 @@ The released final model is:
 
 The corresponding recommended inference script is:
 
-- `tools/infer_prompt4.py`
-
-The corresponding recommended single-image inference script is:
-
-- `tools/infer_single_image_prompt4.py`
+- `tools/infer.py --prompt_version 4`
 
 The corresponding recommended evaluation script is:
 
-- `tools/evaluate_correlation_prompt4.py`
+- `tools/evaluate_correlation.py --prompt_version 4`
 
 ## Quick Start
 
@@ -121,60 +94,54 @@ From `SA-IQA/tools`:
 
 ```bash
 cd SA-IQA/tools
-python infer_prompt4.py --mode all --dimension lighting
+python infer.py --prompt_version 4 --mode all --dimension lighting
 ```
 
 Run the full pipeline for each dimension:
 
 ```bash
-python infer_prompt4.py --mode all --dimension distortion
-python infer_prompt4.py --mode all --dimension harmony
-python infer_prompt4.py --mode all --dimension layout
-python infer_prompt4.py --mode all --dimension lighting
+python infer.py --prompt_version 4 --mode all --dimension distortion
+python infer.py --prompt_version 4 --mode all --dimension harmony
+python infer.py --prompt_version 4 --mode all --dimension layout
+python infer.py --prompt_version 4 --mode all --dimension lighting
 ```
 
-### 2. Run Single-Image Inference
-
-```bash
-cd SA-IQA/tools
-python infer_single_image_prompt4.py --image /path/to/image.jpg --dimension all
-```
-
-### 3. Run Overall Evaluation
+### 2. Run Overall Evaluation
 
 Compute overall correlation across all four dimensions:
 
 ```bash
 cd SA-IQA/tools
-python evaluate_correlation_prompt4.py
+python evaluate_correlation.py --prompt_version 4
 ```
 
-### 4. Run Step-by-Step Modes
+### 3. Run Step-by-Step Modes
 
 Inference only:
 
 ```bash
-python infer_prompt4.py --mode infer --dimension lighting
+python infer.py --prompt_version 4 --mode infer --dimension lighting
 ```
 
 Score conversion only:
 
 ```bash
-python infer_prompt4.py --mode score --dimension lighting
+python infer.py --prompt_version 4 --mode score --dimension lighting
 ```
 
 Evaluation only:
 
 ```bash
-python infer_prompt4.py --mode eval --dimension lighting
+python infer.py --prompt_version 4 --mode eval --dimension lighting
 ```
 
-### 5. Explicitly Specify Paths
+### 4. Explicitly Specify Paths
 
 From `SA-IQA/tools`:
 
 ```bash
-python infer_prompt4.py \
+python infer.py \
+    --prompt_version 4 \
     --mode all \
     --dimension lighting \
     --model_path ../../SA-IQA-model/sa-iqa-prompt4 \
@@ -185,7 +152,8 @@ python infer_prompt4.py \
 From the project root:
 
 ```bash
-python SA-IQA/tools/infer_prompt4.py \
+python SA-IQA/tools/infer.py \
+    --prompt_version 4 \
     --mode all \
     --dimension lighting \
     --model_path ./SA-IQA-model/sa-iqa-prompt4 \
@@ -193,10 +161,11 @@ python SA-IQA/tools/infer_prompt4.py \
     --results_dir ./SA-IQA/results
 ```
 
-### 6. Manually Specify Input and Output Files
+### 5. Manually Specify Input and Output Files
 
 ```bash
-python infer_prompt4.py \
+python infer.py \
+    --prompt_version 4 \
     --mode all \
     --dimension lighting \
     --test_jsonl ../../SA-BENCH/annotations/lighting_3k_test_prompt4.jsonl \
@@ -226,7 +195,7 @@ The output directory will be created automatically if it does not exist.
 ## Notes
 
 - The released final model corresponds to **prompt4**.
-- Prompt1, prompt2, and prompt3 scripts are mainly provided for comparison and ablation.
+- Prompt1, prompt2, and prompt3 are available through `--prompt_version` for comparison and ablation.
 - Make sure `SA-BENCH` and `SA-IQA-model` are placed according to the release directory structure.
 - Inference depends on the released model files and the base model files under `SA-IQA-model/`.
 
@@ -246,4 +215,3 @@ If you find this project useful, please cite:
   year={2025}
 }
 ```
-
