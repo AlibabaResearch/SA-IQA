@@ -10,19 +10,22 @@ Options:
   --cuda_visible_devices IDS  GPU ids. Defaults match the original prompt scripts.
   --master_port PORT          Distributed master port. Defaults to 29500 + prompt version.
   --nproc_per_node N          Number of processes per node. Default: 4.
-  --model PATH                Base model path. Default: ../SA-IQA-model/Ovis2.5-9B.
-  --output_dir PATH           Output path. Default: ../SA-IQA-model/sa-iqa-promptN.
+  --model PATH                Base model path. Default: ./SA-IQA-model/Ovis2.5-9B.
+  --output_dir PATH           Output path. Default: ./SA-IQA-model/sa-iqa-promptN.
   -h, --help                  Show this help.
 
 Unknown options are forwarded to swift sft.
 EOF
 }
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+
 prompt_version=""
 cuda_visible_devices=""
 master_port=""
 nproc_per_node=4
-model="../SA-IQA-model/Ovis2.5-9B"
+model="$REPO_ROOT/SA-IQA-model/Ovis2.5-9B"
 output_dir=""
 extra_args=()
 
@@ -89,7 +92,7 @@ if [[ -z "$master_port" ]]; then
 fi
 
 if [[ -z "$output_dir" ]]; then
-    output_dir="../SA-IQA-model/sa-iqa-prompt${prompt_version}"
+    output_dir="$REPO_ROOT/SA-IQA-model/sa-iqa-prompt${prompt_version}"
 fi
 
 CUDA_VISIBLE_DEVICES="$cuda_visible_devices" MASTER_PORT="$master_port" NPROC_PER_NODE="$nproc_per_node" swift sft \
@@ -100,15 +103,15 @@ CUDA_VISIBLE_DEVICES="$cuda_visible_devices" MASTER_PORT="$master_port" NPROC_PE
     --freeze_vit true \
     --freeze_aligner true \
     --dataset \
-        "../SA-BENCH/annotations/distortion_2k_train_prompt${prompt_version}.jsonl" \
-        "../SA-BENCH/annotations/harmony_7k_train_prompt${prompt_version}.jsonl" \
-        "../SA-BENCH/annotations/layout_6k_train_prompt${prompt_version}.jsonl" \
-        "../SA-BENCH/annotations/lighting_3k_train_prompt${prompt_version}.jsonl" \
+        "$REPO_ROOT/SA-BENCH/annotations/distortion_2k_train_prompt${prompt_version}.jsonl" \
+        "$REPO_ROOT/SA-BENCH/annotations/harmony_7k_train_prompt${prompt_version}.jsonl" \
+        "$REPO_ROOT/SA-BENCH/annotations/layout_6k_train_prompt${prompt_version}.jsonl" \
+        "$REPO_ROOT/SA-BENCH/annotations/lighting_3k_train_prompt${prompt_version}.jsonl" \
     --val_dataset \
-        "../SA-BENCH/annotations/distortion_2k_test_prompt${prompt_version}.jsonl" \
-        "../SA-BENCH/annotations/harmony_7k_test_prompt${prompt_version}.jsonl" \
-        "../SA-BENCH/annotations/layout_6k_test_prompt${prompt_version}.jsonl" \
-        "../SA-BENCH/annotations/lighting_3k_test_prompt${prompt_version}.jsonl" \
+        "$REPO_ROOT/SA-BENCH/annotations/distortion_2k_test_prompt${prompt_version}.jsonl" \
+        "$REPO_ROOT/SA-BENCH/annotations/harmony_7k_test_prompt${prompt_version}.jsonl" \
+        "$REPO_ROOT/SA-BENCH/annotations/layout_6k_test_prompt${prompt_version}.jsonl" \
+        "$REPO_ROOT/SA-BENCH/annotations/lighting_3k_test_prompt${prompt_version}.jsonl" \
     --torch_dtype bfloat16 \
     --deepspeed zero2 \
     --attn_impl flash_attn \

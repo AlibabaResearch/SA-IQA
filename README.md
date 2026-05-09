@@ -1,168 +1,125 @@
-# SA-IQA Release
+# SA-IQA
 
-This repository accompanies the paper **“Beyond Pixels: Benchmarking and Reward-Based Assessing Framework for Visual Spatial Aesthetics.”**
+Official release for **“Beyond Pixels: Benchmarking and Reward-Based Assessing Framework for Visual Spatial Aesthetics.”**
 
-We introduce **Spatial Aesthetics**, a new paradigm for evaluating the aesthetic quality of interior images along four dimensions:
+SA-IQA evaluates the spatial aesthetics of interior images along four dimensions:
 
 - **distortion**
 - **harmony**
 - **layout**
 - **lighting**
 
-This release package contains the **SA-BENCH dataset**, the **SA-IQA codebase**, and the **trained SA-IQA model**.
-
-## Paper
-
-**Title:** Beyond Pixels: Benchmarking and Reward-Based Assessing Framework for Visual Spatial Aesthetics
-
-**Authors:** Yuan Gao, Jin Song, Yiyun Fei, Gongzhe Li, Ruigao Yang
-
-**Affiliations:**  
-1 Alibaba Group  
-2 The Chinese University of Hong Kong, Shenzhen
-
-**Contact:**  
-gaoyuan20@mails.ucas.ac.cn  
-songjin.song@alibaba-inc.com  
-yunhun.fyy@alibaba-inc.com  
-gongzheli1@link.cuhk.edu.cn  
-ruigao.yrg@alibaba-inc.com
-
-**Status:** Accepted at a CVPR 2025 workshop.
-
-**Abstract:**  
-In recent years, Image Quality Assessment (IQA) for AI-generated images (AIGI) has advanced rapidly; however, existing methods primarily target portraits and artistic images, lacking a systematic evaluation of interior scenes. We introduce Spatial Aesthetics, a paradigm that assesses the aesthetic quality of interior images along four dimensions: layout, harmony, lighting, and distortion. We construct SA-BENCH, the first benchmark for spatial aesthetics, comprising 18,000 images and 50,000 precise annotations. Employing SA-BENCH, we systematically evaluate current IQA methodologies and develop SA-IQA, through MLLM fine-tuning and a multidimensional fusion approach, as a comprehensive reward framework for assessing spatial aesthetics. We apply SA-IQA to two downstream tasks: (1) serving as a reward signal integrated with GRPO reinforcement learning to optimize the AIGC generation pipeline, and (2) Best-of-N selection to filter high-quality images and improve generation quality. Experiments indicate that SA-IQA significantly outperforms existing methods on SA-BENCH, setting a new standard for spatial aesthetics evaluation. Code and dataset are released to advance research and applications in this domain.
+This repository contains the SA-IQA code, the SA-BENCH annotations, and the released `sa-iqa-prompt4` model checkpoint.
 
 ## Repository Structure
 
 ```text
-SA-IQA-Release/
+SA-IQA/
+├── LICENSE
 ├── README.md
-├── SA-BENCH/       # Dataset
-├── SA-IQA/         # Codebase
-└── SA-IQA-model/   # Base model and trained SA-IQA model
-```
-
-## Components
-
-### SA-BENCH
-
-`SA-BENCH` contains:
-
-- annotation CSV files
-- prompt-based JSONL files for training and evaluation
-- image folders for four spatial aesthetic dimensions:
-  - distortion
-  - harmony
-  - layout
-  - lighting
-
-See [SA-BENCH/README.md](./SA-BENCH/README.md) for details.
-
-### SA-IQA
-
-`SA-IQA` contains:
-
-- training scripts
-- inference scripts
-- evaluation scripts
-- CSV-to-JSONL conversion tool
-- Python requirements
-
-See [SA-IQA/README.md](./SA-IQA/README.md) for details.
-
-### SA-IQA-model
-
-`SA-IQA-model` contains:
-
-- the base model `Ovis2.5-9B`
-- the released trained model `sa-iqa-prompt4`
-
-Among the four prompt variants, **prompt4** is the recommended setting and `sa-iqa-prompt4` is the final model used for inference. The other prompt versions are mainly provided for ablation and comparison purposes.
-
-See [SA-IQA-model/README.md](./SA-IQA-model/README.md) for details.
-
-## Download and Placement
-
-Please organize the files under the following directory structure:
-
-```text
-SA-IQA-Release/
+├── requirements.txt
+├── tools/
+│   ├── convert_csv_to_jsonl.py
+│   ├── evaluate_correlation.py
+│   ├── infer.py
+│   ├── local_progress.py
+│   ├── prompt_configs.py
+│   └── train_sft.sh
 ├── SA-BENCH/
-├── SA-IQA/
+│   ├── LICENSE
+│   ├── README.md
+│   ├── annotations/
+│   └── images/
 └── SA-IQA-model/
+    ├── LICENSE
+    ├── README.md
+    ├── Ovis2.5-9B/
+    └── sa-iqa-prompt4/
 ```
 
-The default paths used by the provided scripts assume this structure.
-
-If `SA-BENCH` and `SA-IQA-model` are hosted separately, please download them and place them under the same root directory as `SA-IQA`.
-
-## Quick Start
-
-### 1. Install Dependencies
+## Installation
 
 ```bash
-cd SA-IQA
+conda create -n sa-iqa python=3.10 -y
+conda activate sa-iqa
 pip install -r requirements.txt
 ```
 
-> Note: packages such as PyTorch, DeepSpeed, and FlashAttention may require environment-specific installation depending on your CUDA version and hardware setup.
+`requirements.txt` contains inference, scoring, evaluation, and data-conversion dependencies. It installs `torch==2.5.1+cu124`, the matching `torchvision`/`torchaudio` wheels, `flash-attn==2.7.4.post1`, and pins `ms-swift` to the 3.x API because the current inference code uses `swift.llm`.
 
-### 2. Run Inference
+Training with `tools/train_sft.sh` additionally requires a CUDA-compatible training stack such as DeepSpeed.
+
+## Inference
 
 Run inference with the released `sa-iqa-prompt4` model:
 
 ```bash
-cd SA-IQA/tools
-python infer.py --prompt_version 4 --mode all --dimension lighting
+python tools/infer.py --prompt_version 4 --mode all --dimension lighting
 ```
 
 Run all four dimensions:
 
 ```bash
-python infer.py --prompt_version 4 --mode all --dimension distortion
-python infer.py --prompt_version 4 --mode all --dimension harmony
-python infer.py --prompt_version 4 --mode all --dimension layout
-python infer.py --prompt_version 4 --mode all --dimension lighting
+python tools/infer.py --prompt_version 4 --mode all --dimension distortion
+python tools/infer.py --prompt_version 4 --mode all --dimension harmony
+python tools/infer.py --prompt_version 4 --mode all --dimension layout
+python tools/infer.py --prompt_version 4 --mode all --dimension lighting
 ```
 
-### 3. Run Overall Evaluation
+By default, outputs are written under `results/`.
 
-Compute overall correlation across all four dimensions:
+## Step-By-Step Modes
+
+Inference only:
 
 ```bash
-cd SA-IQA/tools
-python evaluate_correlation.py --prompt_version 4
+python tools/infer.py --prompt_version 4 --mode infer --dimension lighting
 ```
 
-## Release Contents
+Score conversion only:
 
-This release includes:
+```bash
+python tools/infer.py --prompt_version 4 --mode score --dimension lighting
+```
 
-- **SA-BENCH**, a benchmark for spatial aesthetics in interior images
-- **SA-IQA**, a codebase for training, inference, and evaluation
-- **sa-iqa-prompt4**, the released trained model for practical use
+Per-dimension evaluation only:
 
-## Notes
+```bash
+python tools/infer.py --prompt_version 4 --mode eval --dimension lighting
+```
 
-- `SA-IQA-model/sa-iqa-prompt4` is the released trained model used for inference.
-- Unified training, inference, and evaluation scripts are provided in `SA-IQA/tools/`.
-- The `results/` folder in `SA-IQA/` stores intermediate inference outputs and scored CSV files.
-- For standard usage, we recommend directly using **prompt4**.
-- This project uses `Ovis2.5-9B` as the base model. Please comply with its original license and notice files when using the released model.
+Overall evaluation across all four dimensions:
 
-## License
+```bash
+python tools/evaluate_correlation.py --prompt_version 4
+```
 
-- `SA-IQA/` is released under its own code license.
-- `SA-BENCH/` is released under its own dataset license.
-- `SA-IQA-model/` is released under its own model license.
-- The base model `Ovis2.5-9B` remains subject to its original license and notice files.
+## Training
 
-Please refer to the corresponding `LICENSE` files in each subdirectory for details.
+Use the unified training entrypoint:
+
+```bash
+bash tools/train_sft.sh --prompt_version 4
+```
+
+Prompt1, prompt2, and prompt3 are available through `--prompt_version` for comparison and ablation. Prompt4 is the recommended setting and corresponds to the released final model.
+
+## Data Conversion
+
+`tools/convert_csv_to_jsonl.py` converts annotation CSV files into prompt-based JSONL files for training or evaluation.
+
+## Licenses
+
+- Code in this repository root and `tools/` is licensed under the Apache License 2.0. See `LICENSE`.
+- `SA-BENCH/` is released under the dataset license in `SA-BENCH/LICENSE`.
+- `SA-IQA-model/` is released under the model license in `SA-IQA-model/LICENSE`.
+- `SA-IQA-model/Ovis2.5-9B/` remains subject to its original license and notice files.
+
+The repository-level `CITATION.cff` license field applies to the code release. Dataset and model usage are governed by their own license files.
 
 ## Citation
 
-If you find this project useful, please cite our work.
+If you find this project useful, please cite:
 
 ```bibtex
 @inproceedings{gao2025beyond,

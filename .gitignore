@@ -11,6 +11,7 @@ Thumbs.db
 *.log
 wandb/
 runs/
+results/
 SA-IQA/results/
 SA-BENCH/annotations/
 SA-BENCH/images/

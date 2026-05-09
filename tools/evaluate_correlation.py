@@ -9,6 +9,11 @@ from prompt_configs import PROMPT_VERSIONS
 
 
 DIMENSIONS = ["distortion", "harmony", "layout", "lighting"]
+REPO_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir))
+
+
+def repo_path(*parts: str) -> str:
+    return os.path.join(REPO_ROOT, *parts)
 
 
 def load_and_merge_csv_files(results_dir: str, prompt_version: int, model_name: str) -> pd.DataFrame:
@@ -78,14 +83,14 @@ def parse_args(argv=None, default_prompt_version: Optional[int] = None):
     parser.add_argument(
         "--results_dir",
         type=str,
-        default="../results",
+        default=repo_path("results"),
         help="Directory containing per-dimension scored CSV files.",
     )
     parser.add_argument(
         "--output_csv",
         type=str,
         default=None,
-        help="Path to save merged CSV. Defaults to ../results/all_prompt{prompt_version}_{model_name}.csv",
+        help="Path to save merged CSV. Defaults to ./results/all_prompt{prompt_version}_{model_name}.csv",
     )
     parser.add_argument(
         "--model_name",

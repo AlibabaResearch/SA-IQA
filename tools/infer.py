@@ -14,6 +14,11 @@ from prompt_configs import PROMPTS, PROMPT_VERSIONS, SUBSET_MAP
 
 LABELS = ["excellent", "good", "fair", "poor", "bad"]
 DIMENSIONS = ["distortion", "harmony", "layout", "lighting"]
+REPO_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir))
+
+
+def repo_path(*parts: str) -> str:
+    return os.path.join(REPO_ROOT, *parts)
 
 
 def calculate_iqa_score(logits: dict, item_image: str = "") -> float:
@@ -236,12 +241,12 @@ def parse_args(argv=None, default_prompt_version: Optional[int] = None):
         "--model_path",
         type=str,
         default=None,
-        help="Path to the trained SA-IQA model. Defaults to ../../SA-IQA-model/sa-iqa-prompt{prompt_version}.",
+        help="Path to the trained SA-IQA model. Defaults to ./SA-IQA-model/sa-iqa-prompt{prompt_version}.",
     )
     parser.add_argument(
         "--data_root",
         type=str,
-        default="../../SA-BENCH",
+        default=repo_path("SA-BENCH"),
         help="Path to the SA-BENCH dataset root.",
     )
     parser.add_argument(
@@ -278,7 +283,7 @@ def parse_args(argv=None, default_prompt_version: Optional[int] = None):
     parser.add_argument(
         "--results_dir",
         type=str,
-        default="../results",
+        default=repo_path("results"),
         help="Directory to save results.",
     )
     parser.add_argument(
@@ -308,7 +313,7 @@ def main(argv=None, default_prompt_version: Optional[int] = None):
     prompt_version = args.prompt_version
 
     if args.model_path is None:
-        args.model_path = f"../../SA-IQA-model/sa-iqa-prompt{prompt_version}"
+        args.model_path = repo_path("SA-IQA-model", f"sa-iqa-prompt{prompt_version}")
 
     message_content = PROMPTS[prompt_version][args.dimension]
     test_jsonl = args.test_jsonl or get_default_test_jsonl(args.data_root, args.dimension, prompt_version)

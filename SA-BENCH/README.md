@@ -1,67 +1,105 @@
+---
+license: other
+license_name: sa-bench-non-commercial
+license_link: LICENSE
+pretty_name: SA-BENCH
+language:
+  - en
+task_categories:
+  - image-classification
+size_categories:
+  - 10K<n<100K
+tags:
+  - image-quality-assessment
+  - aesthetics
+  - spatial-aesthetics
+  - interior-design
+  - benchmark
+configs:
+  - config_name: distortion
+    data_files:
+      - split: train
+        path: annotations/distortion_2k_train.csv
+      - split: test
+        path: annotations/distortion_2k_test.csv
+      - split: full
+        path: annotations/distortion_2k_full.csv
+  - config_name: harmony
+    data_files:
+      - split: train
+        path: annotations/harmony_7k_train.csv
+      - split: test
+        path: annotations/harmony_7k_test.csv
+      - split: full
+        path: annotations/harmony_7k_full.csv
+  - config_name: layout
+    data_files:
+      - split: train
+        path: annotations/layout_6k_train.csv
+      - split: test
+        path: annotations/layout_6k_test.csv
+      - split: full
+        path: annotations/layout_6k_full.csv
+  - config_name: lighting
+    data_files:
+      - split: train
+        path: annotations/lighting_3k_train.csv
+      - split: test
+        path: annotations/lighting_3k_test.csv
+      - split: full
+        path: annotations/lighting_3k_full.csv
+---
+
 # SA-BENCH
 
-`SA-BENCH` is the benchmark dataset released with the paper **“Beyond Pixels: Benchmarking and Reward-Based Assessing Framework for Visual Spatial Aesthetics.”**
+SA-BENCH is the benchmark dataset released with **“Beyond Pixels: Benchmarking and Reward-Based Assessing Framework for Visual Spatial Aesthetics.”**
 
-It is designed for evaluating the **spatial aesthetics** of interior images along four dimensions:
+It evaluates the spatial aesthetics of interior images along four dimensions:
 
 - **distortion**
 - **harmony**
 - **layout**
 - **lighting**
 
-The dataset contains **18,000 images** and corresponding annotations for training and evaluation.
+The dataset contains **18,000 images** with human annotations for training and evaluation.
 
-## Directory Structure
+## Dataset Details
+
+### Dataset Description
+
+SA-BENCH is designed for image quality and aesthetic assessment of interior scenes. It focuses on spatial aesthetics rather than generic image appeal, and provides dimension-specific annotations for:
+
+- **distortion**: geometric distortion, deformation, alignment errors, and material realism
+- **harmony**: style consistency, color coordination, and overall visual coherence
+- **layout**: spatial arrangement, balance, and positional relationships of key elements
+- **lighting**: illumination quality, shadow realism, light-source consistency, and atmosphere
+
+### Dataset Sources
+
+- Repository: this Hugging Face dataset repository
+- Associated paper: **Beyond Pixels: Benchmarking and Reward-Based Assessing Framework for Visual Spatial Aesthetics**
+- Code and model release: SA-IQA
+
+## Dataset Structure
 
 ```text
 SA-BENCH/
 ├── LICENSE
 ├── README.md
 ├── annotations/
-│   ├── distortion_2k_full.csv
-│   ├── distortion_2k_test.csv
-│   ├── distortion_2k_test_prompt1.jsonl
-│   ├── distortion_2k_test_prompt2.jsonl
-│   ├── distortion_2k_test_prompt3.jsonl
-│   ├── distortion_2k_test_prompt4.jsonl
 │   ├── distortion_2k_train.csv
-│   ├── distortion_2k_train_prompt1.jsonl
-│   ├── distortion_2k_train_prompt2.jsonl
-│   ├── distortion_2k_train_prompt3.jsonl
-│   ├── distortion_2k_train_prompt4.jsonl
-│   ├── harmony_7k_full.csv
-│   ├── harmony_7k_test.csv
-│   ├── harmony_7k_test_prompt1.jsonl
-│   ├── harmony_7k_test_prompt2.jsonl
-│   ├── harmony_7k_test_prompt3.jsonl
-│   ├── harmony_7k_test_prompt4.jsonl
+│   ├── distortion_2k_test.csv
+│   ├── distortion_2k_full.csv
 │   ├── harmony_7k_train.csv
-│   ├── harmony_7k_train_prompt1.jsonl
-│   ├── harmony_7k_train_prompt2.jsonl
-│   ├── harmony_7k_train_prompt3.jsonl
-│   ├── harmony_7k_train_prompt4.jsonl
-│   ├── layout_6k_full.csv
-│   ├── layout_6k_test.csv
-│   ├── layout_6k_test_prompt1.jsonl
-│   ├── layout_6k_test_prompt2.jsonl
-│   ├── layout_6k_test_prompt3.jsonl
-│   ├── layout_6k_test_prompt4.jsonl
+│   ├── harmony_7k_test.csv
+│   ├── harmony_7k_full.csv
 │   ├── layout_6k_train.csv
-│   ├── layout_6k_train_prompt1.jsonl
-│   ├── layout_6k_train_prompt2.jsonl
-│   ├── layout_6k_train_prompt3.jsonl
-│   ├── layout_6k_train_prompt4.jsonl
-│   ├── lighting_3k_full.csv
-│   ├── lighting_3k_test.csv
-│   ├── lighting_3k_test_prompt1.jsonl
-│   ├── lighting_3k_test_prompt2.jsonl
-│   ├── lighting_3k_test_prompt3.jsonl
-│   ├── lighting_3k_test_prompt4.jsonl
+│   ├── layout_6k_test.csv
+│   ├── layout_6k_full.csv
 │   ├── lighting_3k_train.csv
-│   ├── lighting_3k_train_prompt1.jsonl
-│   ├── lighting_3k_train_prompt2.jsonl
-│   ├── lighting_3k_train_prompt3.jsonl
-│   └── lighting_3k_train_prompt4.jsonl
+│   ├── lighting_3k_test.csv
+│   ├── lighting_3k_full.csv
+│   └── *_prompt{1,2,3,4}.jsonl
 └── images/
     ├── distortion/
     ├── harmony/
@@ -69,94 +107,65 @@ SA-BENCH/
     └── lighting/
 ```
 
-## Dataset Overview
+### Data Fields
 
-SA-BENCH organizes interior images into four spatial aesthetic dimensions:
+The CSV annotation files contain:
 
-- **distortion**: evaluates geometric distortion, deformation, alignment errors, and material realism
-- **harmony**: evaluates style consistency, color coordination, and overall visual coherence
-- **layout**: evaluates spatial arrangement, balance, and positional relationships of key elements
-- **lighting**: evaluates illumination quality, shadow realism, light-source consistency, and atmosphere
+- `id`: image identifier
+- `{dimension}_score_*`: individual human annotation scores
+- `{dimension}_score_mos`: mean opinion score
+- `{dimension}_score_mos_int`: integer-rounded MOS label used for prompt-response generation
+- `model`: source generation model, when available for that dimension
 
-Each dimension includes:
+The JSONL prompt files contain:
 
-- image files
-- CSV annotations
-- prompt-based JSONL files for model training and evaluation
+- `query`: prompt text
+- `response`: target textual quality label
+- `images`: relative image path list
 
-## Annotation Files
+### Data Splits
 
-The `annotations/` directory provides CSV files for each dimension.
+Each dimension provides `train`, `test`, and `full` CSV splits:
 
-### CSV Files
+| Dimension | Subset | Description |
+| --- | --- | --- |
+| distortion | 2k | Spatial distortion quality |
+| harmony | 7k | Style and color harmony quality |
+| layout | 6k | Spatial layout quality |
+| lighting | 3k | Lighting quality |
 
-For each dimension, three CSV files are provided:
-
-- `*_train.csv`: training split
-- `*_test.csv`: test split
-- `*_full.csv`: full set
-
-These CSV files contain image identifiers and corresponding annotation fields used for training and evaluation.
-
-## Prompt-based JSONL Files
-
-For each dimension and split, we provide JSONL files corresponding to four prompt variants:
-
-- `prompt1`
-- `prompt2`
-- `prompt3`
-- `prompt4`
-
-These files are used by the SA-IQA training and inference scripts.
-
-Examples:
-
-- `lighting_3k_train_prompt4.jsonl`
-- `layout_6k_test_prompt4.jsonl`
-
-Among the four prompt variants, **prompt4** is the recommended setting and corresponds to the released final model `sa-iqa-prompt4`.
-
-## Data Splits
-
-The dataset includes the following subsets:
-
-- **distortion**: 2k
-- **harmony**: 7k
-- **layout**: 6k
-- **lighting**: 3k
-
-Together they form an 18k-image benchmark for spatial aesthetics evaluation.
+Together they form an 18k-image benchmark.
 
 ## Usage
 
-This dataset is intended for:
+The CSV files can be loaded directly through the Hugging Face Dataset Viewer using the metadata configurations above. Prompt-based JSONL files are also included for reproducibility and direct use with SA-IQA training/evaluation scripts.
 
-- benchmarking image quality and aesthetic assessment methods on interior scenes
-- training multimodal models for spatial aesthetics evaluation
-- evaluating dimension-specific quality prediction
-- reward modeling for image generation and selection tasks
+For standard evaluation in this release, use the `prompt4` files with the released `sa-iqa-prompt4` model.
 
-## Used in This Release
+## Intended Use
 
-In this release:
+SA-BENCH is intended for:
 
-- `SA-BENCH` provides the data source
-- `SA-IQA/tools/` provides scripts for training, inference, and evaluation
-- `SA-IQA-model/sa-iqa-prompt4` is the released final model corresponding to the recommended **prompt4** setting
+- non-commercial research on image quality assessment
+- benchmarking spatial aesthetic assessment methods
+- training and evaluating multimodal models for interior-image quality prediction
+- reward-model research for image generation and selection
 
-## Notes
+## Limitations
 
-- Image paths referenced in the JSONL files are organized to work with the provided inference scripts in `SA-IQA/tools/`.
-- Prompt-based JSONL files are provided for reproducibility and direct use in training and evaluation.
-- For standard evaluation in this release, we recommend using the `prompt4` files.
+- The dataset focuses on interior-scene imagery and may not generalize to portraits, landscapes, or general artistic images.
+- Scores reflect the annotation protocol used for this benchmark and should not be treated as universal aesthetic judgments.
+- Users should evaluate fairness, safety, and domain suitability before applying models trained on this dataset to new data.
 
 ## License
 
-Please refer to `LICENSE` for the dataset license and usage terms.
+SA-BENCH is released under the custom non-commercial dataset license in `LICENSE`.
+
+The Hugging Face metadata uses `license: other` because this is not one of the standard permissive open-source license identifiers.
 
 ## Citation
 
-If you find SA-BENCH useful, please cite:
+If you use SA-BENCH, please cite:
 
 ```bibtex
 @inproceedings{gao2025beyond,
@@ -166,4 +175,3 @@ If you find SA-BENCH useful, please cite:
   year={2025}
 }
 ```
-
