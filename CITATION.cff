@@ -13,8 +13,9 @@ authors:
     given-names: Gongzhe
   - family-names: Yang
     given-names: Ruigao
-repository-code: "https://github.com/<your-org-or-username>/SA-IQA"
-abstract: "Official release of SA-BENCH, SA-IQA codebase, and SA-IQA model for spatial aesthetics assessment of interior images."
+repository-code: "https://github.com/AlibabaResearch/SA-IQA"
+abstract: "Official release of SA-BENCH, SA-IQA code
+base, and SA-IQA model for spatial aesthetics assessment of interior images."
 keywords:
   - image quality assessment
   - aesthetics assessment
