@@ -1,7 +1,5 @@
 ---
-license: other
-license_name: sa-iqa-model-non-commercial
-license_link: LICENSE
+license: apache-2.0
 language:
   - en
 library_name: transformers
@@ -24,11 +22,13 @@ SA-IQA is a multimodal image quality assessment model released with **“Beyond 
 
 The released final checkpoint is **`sa-iqa-prompt4`**, a fine-tuned model based on **Ovis2.5-9B** for assessing interior-image spatial aesthetics.
 
-## Hugging Face Upload Note
+## Hugging Face Release Layout
 
-For a standard Hugging Face model repository, upload the contents of `sa-iqa-prompt4/` to the model repository root together with this `README.md` and `LICENSE`.
+This Hugging Face repository is released as a full model bundle. Download the whole repository to `./SA-IQA-model` when using it with the SA-IQA codebase.
 
-This release bundle also includes `Ovis2.5-9B/` for reproducibility, but Hugging Face model repositories are normally expected to expose one model configuration at the repository root. If you upload the whole `SA-IQA-model/` directory as-is, automatic model loading from the root may not work because model files are nested under `sa-iqa-prompt4/`.
+The `sa-iqa-prompt4/` directory is the released final fine-tuned checkpoint for inference. The `Ovis2.5-9B/` directory is the bundled base model copy used by `tools/train_sft.sh` for training and reproducibility.
+
+Because this repository contains two model directories, automatic loading from the repository root is not expected to work. Load the fine-tuned checkpoint from `SA-IQA-model/sa-iqa-prompt4`, or pass that path through the SA-IQA inference script with `--model_path`.
 
 ## Model Details
 
@@ -43,7 +43,7 @@ This release bundle also includes `Ovis2.5-9B/` for reproducibility, but Hugging
 
 ### Intended Use
 
-SA-IQA is intended for non-commercial research and evaluation, including:
+SA-IQA is intended for research, evaluation, and application use, including:
 
 - spatial aesthetic assessment of interior images
 - image quality benchmarking on SA-BENCH
@@ -54,7 +54,6 @@ SA-IQA is intended for non-commercial research and evaluation, including:
 
 The model is not intended for:
 
-- commercial deployment without prior permission
 - universal aesthetic judgment outside the interior-scene domain
 - safety-critical or legally binding decision making
 
@@ -66,13 +65,13 @@ Use the SA-IQA inference script from the code repository:
 python tools/infer.py --prompt_version 4 --mode all --dimension lighting
 ```
 
-When running from the release repository root, the default model path is:
+When running from the release bundle root, the default model path is:
 
 ```text
 SA-IQA-model/sa-iqa-prompt4
 ```
 
-If this checkpoint is uploaded as a standalone Hugging Face model repository with the checkpoint files at the repository root, pass that local or Hub-downloaded checkpoint path through `--model_path`.
+If you downloaded this Hugging Face repository to another local path, pass the nested `sa-iqa-prompt4` checkpoint path through `--model_path`.
 
 ## Release Bundle Structure
 
@@ -80,7 +79,7 @@ If this checkpoint is uploaded as a standalone Hugging Face model repository wit
 SA-IQA-model/
 ├── LICENSE
 ├── README.md
-├── Ovis2.5-9B/
+├── Ovis2.5-9B/                  # Base model used by training scripts
 │   ├── LICENSE
 │   ├── NOTICE
 │   ├── config.json
@@ -90,7 +89,7 @@ SA-IQA-model/
 │   ├── model-00003-of-00004.safetensors
 │   ├── model-00004-of-00004.safetensors
 │   └── ...
-└── sa-iqa-prompt4/
+└── sa-iqa-prompt4/              # Fine-tuned checkpoint used for inference
     ├── config.json
     ├── modeling_ovis2_5.py
     ├── model-00001-of-00004.safetensors
@@ -102,7 +101,7 @@ SA-IQA-model/
 
 ## Training Data
 
-The model is fine-tuned and evaluated on SA-BENCH, an 18k-image benchmark for spatial aesthetics in interior scenes.
+The model is fine-tuned and evaluated on SA-BENCH, a 17,768-example benchmark for spatial aesthetics in interior scenes.
 
 ## Limitations
 
@@ -112,14 +111,12 @@ The model is fine-tuned and evaluated on SA-BENCH, an 18k-image benchmark for sp
 
 ## License
 
-The released SA-IQA model weights are governed by the custom non-commercial model license in `LICENSE`.
+The released SA-IQA model weights are licensed under the Apache License 2.0. See `LICENSE` for the full license text.
 
-This model is fine-tuned from Ovis2.5-9B. Users must also comply with the base model license and notice files:
+This model is fine-tuned from Ovis2.5-9B, which is also released under the Apache License 2.0. When redistributing or modifying this model, retain attribution and relevant notices from the base model:
 
 - `Ovis2.5-9B/LICENSE`
 - `Ovis2.5-9B/NOTICE`
-
-The Hugging Face metadata uses `license: other` because this model license is not one of the standard open-source license identifiers.
 
 ## Citation
 

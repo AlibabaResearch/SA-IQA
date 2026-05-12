@@ -9,7 +9,10 @@ SA-IQA evaluates the spatial aesthetics of interior images along four dimensions
 - **layout**
 - **lighting**
 
-This repository contains the SA-IQA code, the SA-BENCH annotations, and the released `sa-iqa-prompt4` model checkpoint.
+This repository contains the SA-IQA code. The released model bundle and SA-BENCH dataset are hosted on Hugging Face:
+
+- Model bundle: `AliKunYu/SA-IQA-model`
+- Dataset: `AliKunYu/SA-BENCH`
 
 ## Repository Structure
 
@@ -25,12 +28,12 @@ SA-IQA/
 │   ├── local_progress.py
 │   ├── prompt_configs.py
 │   └── train_sft.sh
-├── SA-BENCH/
+├── SA-BENCH/                 # Downloaded from AliKunYu/SA-BENCH
 │   ├── LICENSE
 │   ├── README.md
 │   ├── annotations/
 │   └── images/
-└── SA-IQA-model/
+└── SA-IQA-model/             # Downloaded from AliKunYu/SA-IQA-model
     ├── LICENSE
     ├── README.md
     ├── Ovis2.5-9B/
@@ -49,6 +52,42 @@ pip install -r requirements.txt
 
 Training with `tools/train_sft.sh` additionally requires a CUDA-compatible training stack such as DeepSpeed.
 
+## Download Model and Dataset
+
+Install the Hugging Face Hub CLI if it is not already available:
+
+```bash
+pip install -U huggingface_hub
+```
+
+From the repository root, download the model bundle and dataset into the expected local directory names:
+
+```bash
+hf download AliKunYu/SA-IQA-model \
+  --repo-type model \
+  --local-dir SA-IQA-model
+
+hf download AliKunYu/SA-BENCH \
+  --repo-type dataset \
+  --local-dir SA-BENCH
+```
+
+The local layout should be:
+
+```text
+SA-IQA/
+├── SA-IQA-model/
+│   ├── Ovis2.5-9B/
+│   └── sa-iqa-prompt4/
+└── SA-BENCH/
+    ├── annotations/
+    └── images/
+```
+
+Keep these directory names if you want to use the default script arguments. `tools/infer.py` loads `./SA-IQA-model/sa-iqa-prompt4` by default for prompt 4, and `tools/train_sft.sh` uses `./SA-IQA-model/Ovis2.5-9B` as the default base model.
+
+If you download the files to another location, pass explicit paths through `--model_path`, `--data_root`, or `--model`.
+
 ## Inference
 
 Run inference with the released `sa-iqa-prompt4` model:
@@ -56,6 +95,13 @@ Run inference with the released `sa-iqa-prompt4` model:
 ```bash
 python tools/infer.py --prompt_version 4 --mode all --dimension lighting
 ```
+
+This command uses:
+
+- model: `./SA-IQA-model/sa-iqa-prompt4`
+- data: `./SA-BENCH`
+- test split: `./SA-BENCH/annotations/lighting_3k_test_prompt4.jsonl`
+- output: `./results/lighting_prompt4_sa-iqa-prompt4.jsonl` and `./results/lighting_prompt4_sa-iqa-prompt4.csv`
 
 Run all four dimensions:
 
@@ -67,6 +113,12 @@ python tools/infer.py --prompt_version 4 --mode all --dimension lighting
 ```
 
 By default, outputs are written under `results/`.
+
+For a quick smoke test, reduce the inference batch size if GPU memory is limited:
+
+```bash
+python tools/infer.py --prompt_version 4 --mode all --dimension lighting --batch_size 1 --max_batch_size 1
+```
 
 ## Step-By-Step Modes
 
@@ -102,6 +154,8 @@ Use the unified training entrypoint:
 bash tools/train_sft.sh --prompt_version 4
 ```
 
+The default training base model path is `./SA-IQA-model/Ovis2.5-9B`, so download `AliKunYu/SA-IQA-model` as the full bundle before training. The default output path for prompt 4 is `./SA-IQA-model/sa-iqa-prompt4`.
+
 Prompt1, prompt2, and prompt3 are available through `--prompt_version` for comparison and ablation. Prompt4 is the recommended setting and corresponds to the released final model.
 
 ## Data Conversion
@@ -111,9 +165,9 @@ Prompt1, prompt2, and prompt3 are available through `--prompt_version` for compa
 ## Licenses
 
 - Code in this repository root and `tools/` is licensed under the Apache License 2.0. See `LICENSE`.
-- `SA-BENCH/` is released under the dataset license in `SA-BENCH/LICENSE`.
-- `SA-IQA-model/` is released under the model license in `SA-IQA-model/LICENSE`.
-- `SA-IQA-model/Ovis2.5-9B/` remains subject to its original license and notice files.
+- `SA-BENCH/` is licensed under the Apache License 2.0. See `SA-BENCH/LICENSE`.
+- `SA-IQA-model/` is licensed under the Apache License 2.0. See `SA-IQA-model/LICENSE`.
+- `SA-IQA-model/Ovis2.5-9B/` is the bundled base model copy and retains its original Apache License 2.0 license and notice files.
 
 The repository-level `CITATION.cff` license field applies to the code release. Dataset and model usage are governed by their own license files.
 

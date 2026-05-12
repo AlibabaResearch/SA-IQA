@@ -1,7 +1,5 @@
 ---
-license: other
-license_name: sa-bench-non-commercial
-license_link: LICENSE
+license: apache-2.0
 pretty_name: SA-BENCH
 language:
   - en
@@ -10,6 +8,7 @@ task_categories:
 size_categories:
   - 10K<n<100K
 tags:
+  - image
   - image-quality-assessment
   - aesthetics
   - spatial-aesthetics
@@ -61,7 +60,7 @@ It evaluates the spatial aesthetics of interior images along four dimensions:
 - **layout**
 - **lighting**
 
-The dataset contains **18,000 images** with human annotations for training and evaluation.
+The dataset contains **17,768 annotated examples** across four spatial-aesthetic dimensions, with image assets and human annotations for training and evaluation.
 
 ## Dataset Details
 
@@ -101,10 +100,10 @@ SA-BENCH/
 │   ├── lighting_3k_full.csv
 │   └── *_prompt{1,2,3,4}.jsonl
 └── images/
-    ├── distortion/
-    ├── harmony/
-    ├── layout/
-    └── lighting/
+    ├── distortion/images/
+    ├── harmony/images/
+    ├── layout/images/
+    └── lighting/images/
 ```
 
 ### Data Fields
@@ -121,7 +120,9 @@ The JSONL prompt files contain:
 
 - `query`: prompt text
 - `response`: target textual quality label
-- `images`: relative image path list
+- `images`: image path list used by the accompanying SA-IQA codebase
+
+The JSONL `images` values intentionally keep the `SA-BENCH/` prefix, for example `SA-BENCH/images/distortion/images/distortion_1025.jpg`. This matches the expected layout when the dataset directory is used together with the SA-IQA code from the parent project directory. When loading files from inside the Hugging Face dataset repository root directly, strip the leading `SA-BENCH/` prefix or prepend the parent directory accordingly.
 
 ### Data Splits
 
@@ -129,12 +130,12 @@ Each dimension provides `train`, `test`, and `full` CSV splits:
 
 | Dimension | Subset | Description |
 | --- | --- | --- |
-| distortion | 2k | Spatial distortion quality |
-| harmony | 7k | Style and color harmony quality |
-| layout | 6k | Spatial layout quality |
-| lighting | 3k | Lighting quality |
+| distortion | 2,226 | Spatial distortion quality |
+| harmony | 6,741 | Style and color harmony quality |
+| layout | 5,556 | Spatial layout quality |
+| lighting | 3,245 | Lighting quality |
 
-Together they form an 18k-image benchmark.
+Together they form a 17,768-example benchmark.
 
 ## Usage
 
@@ -159,9 +160,7 @@ SA-BENCH is intended for:
 
 ## License
 
-SA-BENCH is released under the custom non-commercial dataset license in `LICENSE`.
-
-The Hugging Face metadata uses `license: other` because this is not one of the standard permissive open-source license identifiers.
+SA-BENCH is released under the Apache License 2.0. See `LICENSE` for the full license text.
 
 ## Citation
 
