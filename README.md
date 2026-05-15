@@ -2,6 +2,8 @@
 
 Official release for **“Beyond Pixels: Benchmarking and Reward-Based Assessing Framework for Visual Spatial Aesthetics.”**
 
+Project documentation is being updated.
+
 SA-IQA evaluates the spatial aesthetics of interior images along four dimensions:
 
 - **distortion**
