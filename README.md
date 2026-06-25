@@ -13,8 +13,8 @@ SA-IQA evaluates the spatial aesthetics of interior images along four dimensions
 
 This repository contains the SA-IQA code. The released model bundle and SA-BENCH dataset are hosted on Hugging Face:
 
-- Model bundle: `AliKunYu/SA-IQA-model`
-- Dataset: `AliKunYu/SA-BENCH`
+- Model bundle: `AliHome3D/SA-IQA-model`
+- Dataset: `AliHome3D/SA-BENCH`
 
 ## Repository Structure
 
@@ -30,12 +30,12 @@ SA-IQA/
 │   ├── local_progress.py
 │   ├── prompt_configs.py
 │   └── train_sft.sh
-├── SA-BENCH/                 # Downloaded from AliKunYu/SA-BENCH
+├── SA-BENCH/                 # Downloaded from AliHome3D/SA-BENCH
 │   ├── LICENSE
 │   ├── README.md
 │   ├── annotations/
 │   └── images/
-└── SA-IQA-model/             # Downloaded from AliKunYu/SA-IQA-model
+└── SA-IQA-model/             # Downloaded from AliHome3D/SA-IQA-model
     ├── LICENSE
     ├── README.md
     ├── Ovis2.5-9B/
@@ -65,11 +65,11 @@ pip install -U huggingface_hub
 From the repository root, download the model bundle and dataset into the expected local directory names:
 
 ```bash
-hf download AliKunYu/SA-IQA-model \
+hf download AliHome3D/SA-IQA-model \
   --repo-type model \
   --local-dir SA-IQA-model
 
-hf download AliKunYu/SA-BENCH \
+hf download AliHome3D/SA-BENCH \
   --repo-type dataset \
   --local-dir SA-BENCH
 ```
@@ -156,7 +156,7 @@ Use the unified training entrypoint:
 bash tools/train_sft.sh --prompt_version 4
 ```
 
-The default training base model path is `./SA-IQA-model/Ovis2.5-9B`, so download `AliKunYu/SA-IQA-model` as the full bundle before training. The default output path for prompt 4 is `./SA-IQA-model/sa-iqa-prompt4`.
+The default training base model path is `./SA-IQA-model/Ovis2.5-9B`, so download `AliHome3D/SA-IQA-model` as the full bundle before training. The default output path for prompt 4 is `./SA-IQA-model/sa-iqa-prompt4`.
 
 Prompt1, prompt2, and prompt3 are available through `--prompt_version` for comparison and ablation. Prompt4 is the recommended setting and corresponds to the released final model.
 
