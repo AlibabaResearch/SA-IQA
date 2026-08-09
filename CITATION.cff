@@ -37,5 +37,8 @@ preferred-citation:
       given-names: Gongzhe
     - family-names: Yang
       given-names: Ruigao
+  collection-title: "Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR) Workshops"
+  month: 6
   year: 2026
-  booktitle: "CVPR 2026 Workshop"
+  start: 1819
+  end: 1829
