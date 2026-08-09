@@ -1,8 +1,10 @@
 # SA-IQA
 
-Official release for **“Beyond Pixels: Benchmarking and Reward-Based Assessing Framework for Visual Spatial Aesthetics.”**
+Official release for **“Beyond Pixels: Benchmarking and Reward-Based Assessing Framework for Visual Spatial Aesthetics”**.
 
-Project documentation is being updated.
+**Accepted to CVPRW 2026.**
+
+[CVF Open Access](https://openaccess.thecvf.com/content/CVPR2026W/NTIRE/html/Gao_Beyond_Pixels_Benchmarking_and_Reward-Based_Assessing_Framework_for_Visual_Spatial_CVPRW_2026_paper.html) | [arXiv](https://arxiv.org/abs/2512.05098) | Dataset (Hugging Face): **coming soon**
 
 SA-IQA evaluates the spatial aesthetics of interior images along four dimensions:
 
@@ -178,10 +180,12 @@ The repository-level `CITATION.cff` license field applies to the code release. D
 If you find this project useful, please cite:
 
 ```bibtex
-@inproceedings{gao2025beyond,
-  title={Beyond Pixels: Benchmarking and Reward-Based Assessing Framework for Visual Spatial Aesthetics},
-  author={Gao, Yuan and Song, Jin and Fei, Yiyun and Li, Gongzhe and Yang, Ruigao},
-  booktitle={CVPR 2025 Workshop},
-  year={2025}
+@InProceedings{Gao_2026_CVPR,
+    author    = {Gao, Yuan and Song, Jin and Fei, Yiyun and Li, Gongzhe and Yang, Ruigao},
+    title     = {Beyond Pixels: Benchmarking and Reward-Based Assessing Framework for Visual Spatial Aesthetics},
+    booktitle = {Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR) Workshops},
+    month     = {June},
+    year      = {2026},
+    pages     = {1819-1829}
 }
 ```
