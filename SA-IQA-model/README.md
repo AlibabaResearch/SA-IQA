@@ -123,10 +123,12 @@ This model is fine-tuned from Ovis2.5-9B, which is also released under the Apach
 If you use this model, please cite:
 
 ```bibtex
-@inproceedings{gao2025beyond,
-  title={Beyond Pixels: Benchmarking and Reward-Based Assessing Framework for Visual Spatial Aesthetics},
-  author={Gao, Yuan and Song, Jin and Fei, Yiyun and Li, Gongzhe and Yang, Ruigao},
-  booktitle={CVPR 2025 Workshop},
-  year={2025}
+@InProceedings{Gao_2026_CVPR,
+    author    = {Gao, Yuan and Song, Jin and Fei, Yiyun and Li, Gongzhe and Yang, Ruigao},
+    title     = {Beyond Pixels: Benchmarking and Reward-Based Assessing Framework for Visual Spatial Aesthetics},
+    booktitle = {Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR) Workshops},
+    month     = {June},
+    year      = {2026},
+    pages     = {1819-1829}
 }
 ```
