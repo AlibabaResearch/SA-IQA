@@ -167,10 +167,12 @@ SA-BENCH is released under the Apache License 2.0. See `LICENSE` for the full li
 If you use SA-BENCH, please cite:
 
 ```bibtex
-@inproceedings{gao2025beyond,
-  title={Beyond Pixels: Benchmarking and Reward-Based Assessing Framework for Visual Spatial Aesthetics},
-  author={Gao, Yuan and Song, Jin and Fei, Yiyun and Li, Gongzhe and Yang, Ruigao},
-  booktitle={CVPR 2025 Workshop},
-  year={2025}
+@InProceedings{Gao_2026_CVPR,
+    author    = {Gao, Yuan and Song, Jin and Fei, Yiyun and Li, Gongzhe and Yang, Ruigao},
+    title     = {Beyond Pixels: Benchmarking and Reward-Based Assessing Framework for Visual Spatial Aesthetics},
+    booktitle = {Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR) Workshops},
+    month     = {June},
+    year      = {2026},
+    pages     = {1819-1829}
 }
 ```
