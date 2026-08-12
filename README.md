@@ -4,7 +4,7 @@ Official release for **“Beyond Pixels: Benchmarking and Reward-Based Assessing
 
 **Accepted to CVPRW 2026.**
 
-[CVF Open Access](https://openaccess.thecvf.com/content/CVPR2026W/NTIRE/html/Gao_Beyond_Pixels_Benchmarking_and_Reward-Based_Assessing_Framework_for_Visual_Spatial_CVPRW_2026_paper.html) | [arXiv](https://arxiv.org/abs/2512.05098) | Dataset (Hugging Face): **coming soon**
+[CVF Open Access](https://openaccess.thecvf.com/content/CVPR2026W/NTIRE/html/Gao_Beyond_Pixels_Benchmarking_and_Reward-Based_Assessing_Framework_for_Visual_Spatial_CVPRW_2026_paper.html) | [arXiv](https://arxiv.org/abs/2512.05098) | [Model](https://huggingface.co/gaoyuan-ai/SA-IQA-model) | [Dataset](https://huggingface.co/datasets/gaoyuan-ai/SA-BENCH)
 
 SA-IQA evaluates the spatial aesthetics of interior images along four dimensions:
 
@@ -15,8 +15,8 @@ SA-IQA evaluates the spatial aesthetics of interior images along four dimensions
 
 This repository contains the SA-IQA code. The released model bundle and SA-BENCH dataset are hosted on Hugging Face:
 
-- Model bundle: `AliHome3D/SA-IQA-model`
-- Dataset: `AliHome3D/SA-BENCH`
+- Model bundle: [gaoyuan-ai/SA-IQA-model](https://huggingface.co/gaoyuan-ai/SA-IQA-model)
+- Dataset: [gaoyuan-ai/SA-BENCH](https://huggingface.co/datasets/gaoyuan-ai/SA-BENCH)
 
 ## Repository Structure
 
@@ -32,12 +32,12 @@ SA-IQA/
 │   ├── local_progress.py
 │   ├── prompt_configs.py
 │   └── train_sft.sh
-├── SA-BENCH/                 # Downloaded from AliHome3D/SA-BENCH
+├── SA-BENCH/                 # Downloaded from gaoyuan-ai/SA-BENCH
 │   ├── LICENSE
 │   ├── README.md
 │   ├── annotations/
 │   └── images/
-└── SA-IQA-model/             # Downloaded from AliHome3D/SA-IQA-model
+└── SA-IQA-model/             # Downloaded from gaoyuan-ai/SA-IQA-model
     ├── LICENSE
     ├── README.md
     ├── Ovis2.5-9B/
@@ -67,11 +67,11 @@ pip install -U huggingface_hub
 From the repository root, download the model bundle and dataset into the expected local directory names:
 
 ```bash
-hf download AliHome3D/SA-IQA-model \
+hf download gaoyuan-ai/SA-IQA-model \
   --repo-type model \
   --local-dir SA-IQA-model
 
-hf download AliHome3D/SA-BENCH \
+hf download gaoyuan-ai/SA-BENCH \
   --repo-type dataset \
   --local-dir SA-BENCH
 ```
@@ -158,7 +158,7 @@ Use the unified training entrypoint:
 bash tools/train_sft.sh --prompt_version 4
 ```
 
-The default training base model path is `./SA-IQA-model/Ovis2.5-9B`, so download `AliHome3D/SA-IQA-model` as the full bundle before training. The default output path for prompt 4 is `./SA-IQA-model/sa-iqa-prompt4`.
+The default training base model path is `./SA-IQA-model/Ovis2.5-9B`, so download `gaoyuan-ai/SA-IQA-model` as the full bundle before training. The default output path for prompt 4 is `./SA-IQA-model/sa-iqa-prompt4`.
 
 Prompt1, prompt2, and prompt3 are available through `--prompt_version` for comparison and ablation. Prompt4 is the recommended setting and corresponds to the released final model.
 
